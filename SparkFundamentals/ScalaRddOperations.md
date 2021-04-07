@@ -1,36 +1,15 @@
-Run the following lines of code to get the data
-// download the required module to run shell commands within the notebook
-import sys.process._
-If you completed the Getting Started lab, then you should have the data downloaded and unzipped in the /resources/jupyterlab/labs/BD0211EN/LabData/ directory. 
-Otherwise, please uncomment the last two lines of code in each of the following cells to download and unzip the data.
-
-// download the data from the IBM Server
-// this may take ~30 seconds depending on your internet speed
-​
-//"wget --quiet https://cocl.us/BD0211EN_Data" !
-​
-//println("Data Downloaded!")
-// this may take ~30 seconds depending on your internet speed
-​
-//"unzip -q -o -d /resources/jupyterlab/labs/BD0211EN/ BD0211EN_Data" !
-​
-//println("Data Extracted!")
-The data is in a folder called LabData. Let's list all the files in the data that we just downloaded and extracted.
-
-// list the extracted files
-"ls -1 /resources/jupyterlab/labs/BD0211EN/LabData" !
-Now we are going to create an RDD file from the file README. This is created using the spark context ".textFile" just as in the previous lab. 
-As we know the initial operation is a transformation, so nothing actually happens. We're just telling it that we want to create a readme RDD.
-
 Run the code in the following cell. This was an RDD transformation, thus it returned a pointer to a RDD, which we have named as readme.
 
 ```val readme = sc.textFile("/resources/jupyterlab/labs/BD0211EN/LabData/README.md")```
+
 Let’s perform some RDD actions on this text file. Count the number of items in the RDD using this command:
 
 ```readme.count()```
+
 Let’s run another action. Run this command to find the first item in the RDD:
 
 ```readme.first()```
+
 Now let’s try a transformation. Use the filter transformation to return a new RDD with a subset of the items in the file. Type in this command:
 
 ```val linesWithSpark = readme.filter(line => line.contains("Spark"))
@@ -43,23 +22,27 @@ You can even chain together transformations and actions. To find out how many li
 ```readme.filter(line => line.contains("Spark")).count()```
 
 ## More on RDD Operations
+
 This section builds upon the previous section. In this section, you will see that RDD can be used for more complex computations. You will find the 
 line from that readme file with the most words in it.
 
 ```readme.map(line => line.split(" ").size).
                     reduce((a, b) => if (a > b) a else b)
 ```
+
 There are two parts to this. The first maps a line to an integer value, the number of words in that line. In the second part reduce is called to 
 find the line with the most words in it. The arguments to map and reduce are Scala function literals (closures), but you can use any language feature or Scala/Java library.
 
 In the next step, you use the Math.max() function to show that you can indeed use a Java library instead. Import in the java.lang.Math library:
 
 ```import java.lang.Math```
+
 Now run with the max function:
 
 ```readme.map(line => line.split(" ").size).
         reduce((a, b) => Math.max(a, b))
 ```
+
 Spark has a MapReduce data flow pattern. We can use this to do a word count on the readme file.
 
 ```val wordCounts = readme.flatMap(line => line.split(" ")).
@@ -93,18 +76,23 @@ In the cell below, determine what is the most frequent CHARACTER in the README, 
 First, let's analyze a log file in the current directory.
 
 ```val logFile = sc.textFile("/resources/jupyterlab/labs/BD0211EN/LabData/notebook.log")```
+
 Filter out the lines that contains INFO (or ERROR, if the particular log has it)
 
 ```val info = logFile.filter(line => line.contains("INFO"))```
+
 Count the lines:
 
 ```info.count()```
+
 Count the lines with Spark in it by combining transformation and action.
 
 ```info.filter(line => line.contains("spark")).count()```
+
 Fetch those lines as an array of Strings
 
 ```info.filter(line => line.contains("spark")).collect() foreach println```
+
 Remember that we went over the DAG. It is what provides the fault tolerance in Spark. Nodes can re-compute its state by borrowing the DAG from a neighboring node. 
 You can view the graph of an RDD using the toDebugString command.
 
