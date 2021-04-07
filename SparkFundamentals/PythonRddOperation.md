@@ -3,8 +3,6 @@
 Now, let's create an RDD by loading the log file that we analyze in the Scala version of this lab.
 
 logFile = sc.textFile("/resources/jupyterlab/labs/BD0211EN/LabData/notebook.log")
-YOUR TURN:
-In the cell below, filter out the lines that contains INFO
 info = logFile.filter(lambda line: "INFO" in line)
 
 ​
