@@ -12,7 +12,8 @@ Let’s run another action. Run this command to find the first item in the RDD:
 
 Now let’s try a transformation. Use the filter transformation to return a new RDD with a subset of the items in the file. Type in this command:
 
-```val linesWithSpark = readme.filter(line => line.contains("Spark"))
+```
+val linesWithSpark = readme.filter(line => line.contains("Spark"))
 linesWithSpark.count()
 ```
 Again, this returned a pointer to a RDD with the results of the filter transformation.
@@ -39,13 +40,15 @@ In the next step, you use the Math.max() function to show that you can indeed us
 
 Now run with the max function:
 
-```readme.map(line => line.split(" ").size).
+```
+readme.map(line => line.split(" ").size).
         reduce((a, b) => Math.max(a, b))
 ```
 
 Spark has a MapReduce data flow pattern. We can use this to do a word count on the readme file.
 
-```val wordCounts = readme.flatMap(line => line.split(" ")).
+```
+val wordCounts = readme.flatMap(line => line.split(" ")).
                         map(word => (word, 1)).
                         reduceByKey((a,b) => a + b)
 ```
@@ -59,58 +62,70 @@ The safer approach is to use the take() function e.g. take(n).foreach(println)
 wordCounts.collect().foreach(println)
 You can also do:
 
-```println(wordCounts.collect().mkString("\n"))
-   println(wordCounts.collect().deep)
+```
+println(wordCounts.collect().mkString("\n"))
+println(wordCounts.collect().deep)
 ```
 
 YOUR TURN:
 In the cell below, determine what is the most frequent CHARACTER in the README, and how many times was it used?
 // WRITE YOUR CODE BELOW
-```val wordCounts = readme.flatMap(line => line.split(" ")).
+```
+val wordCounts = readme.flatMap(line => line.split(" ")).
                         map(word => (word, 1)).
                         reduceByKey((a,b) => a + b).
                         reduce((a, b) => if (a._2 > b._2) a else b)
 ```
 
 ## Analysing a log file
+
 First, let's analyze a log file in the current directory.
 
 ```val logFile = sc.textFile("/resources/jupyterlab/labs/BD0211EN/LabData/notebook.log")```
+
 
 Filter out the lines that contains INFO (or ERROR, if the particular log has it)
 
 ```val info = logFile.filter(line => line.contains("INFO"))```
 
+
 Count the lines:
 
 ```info.count()```
+
 
 Count the lines with Spark in it by combining transformation and action.
 
 ```info.filter(line => line.contains("spark")).count()```
 
+
 Fetch those lines as an array of Strings
 
 ```info.filter(line => line.contains("spark")).collect() foreach println```
+
 
 Remember that we went over the DAG. It is what provides the fault tolerance in Spark. Nodes can re-compute its state by borrowing the DAG from a neighboring node. 
 You can view the graph of an RDD using the toDebugString command.
 
 ```println(info.toDebugString)```
 
+
 ## Joining RDDs
+
 Next, you are going to create RDDs for the README and the POM file in the current directory.
 
 ```
 val readmeFile = sc.textFile("/resources/jupyterlab/labs/BD0211EN/LabData/README.md")
 val pom = sc.textFile("/resources/jupyterlab/labs/BD0211EN/LabData/pom.xml")
 ```
+
 How many Spark keywords are in each file?
 
 ```
 println(readmeFile.filter(line => line.contains("Spark")).count())
 println(pom.filter(line => line.contains("Spark")).count())
 ```
+
 Now do a WordCount on each RDD so that the results are (K,V) pairs of (word,count)
 
 ```
@@ -126,6 +141,7 @@ val pomCount = pom.
                 map(word => (word, 1)).
                 reduceByKey(_ + _)
 ```
+
 To see the array for either of them, just call the collect function on it.
 
 ```
@@ -134,6 +150,7 @@ readmeCount.collect() foreach println
 println("Pom Count\n")
 pomCount.collect() foreach println
 ```
+
 Now let's join these two RDDs together to get a collective set. The join function combines the two datasets (K,V) and (K,W) together and get (K, (V,W)). 
 Let's join these two counts together and then cache it.
 
@@ -141,9 +158,11 @@ Let's join these two counts together and then cache it.
 val joined = readmeCount.join(pomCount)
 joined.cache()
 ```
+
 Let's see what's in the joined RDD.
 
 ```joined.collect.foreach(println)```
+
 Let's combine the values together to get the total count. The operations in this command tells Spark to combine the values from (K,V) and (K,W) to give us(K, V+W). 
 The ._ notation is a way to access the value on that particular index of the key value pair.
 
@@ -151,6 +170,7 @@ The ._ notation is a way to access the value on that particular index of the key
 val joinedSum = joined.map(k => (k._1, (k._2)._1 + (k._2)._2))
 joinedSum.collect() foreach println
 ```
+
 To check if it is correct, print the first five elements from the joined and the joinedSum RDD
 
 ```println("Joined Individial\n")
@@ -172,9 +192,11 @@ Read more here: http://spark.apache.org/docs/latest/programming-guide.html#broad
 Let's create a broadcast variable:
 
 ```val broadcastVar = sc.broadcast(Array(1,2,3))```
+
 To get the value, type in:
 
 ```broadcastVar.value```
+
 Accumulators are variables that can only be added through an associative operation. It is used to implement counters and sum efficiently in parallel. 
 Spark natively supports numeric type accumulators and standard mutable collections. Programmers can extend these for new types. Only the driver can read 
 the values of the accumulators. The workers can only invoke it to increment the value.
@@ -182,48 +204,51 @@ the values of the accumulators. The workers can only invoke it to increment the 
 Create the accumulator variable. Type in:
 
 ```val accum = sc.accumulator(0)```
+
 Next parallelize an array of four integers and run it through a loop to add each integer value to the accumulator variable. Type in:
 
 ```sc.parallelize(Array(1,2,3,4)).foreach(x => accum += x)```
+
 To get the current value of the accumulator variable, type in:
 
 ```accum.value```
+
 You should get a value of 10. This command can only be invoked on the driver side. The worker nodes can only increment the accumulator.
 
 ## Key-value pairs
+
 You have already seen a bit about key-value pairs in the Joining RDD section. Here is a brief example of how to create a key-value pair and access its values. 
 Remember that certain operations such as map and reduce only works on key-value pairs.
 
 Create a key-value pair of two characters. Type in:
-
 ```val pair = ('a', 'b')```
-To access the value of the first index using the .1_ method and .2_ method for the 2nd.
 
+To access the value of the first index using the .1_ method and .2_ method for the 2nd.
 ```
 pair._1
 pair._2
 ```
 
 # Sample Application
+
 In this section, you will be using a subset of a data for taxi trips that will determine the top 10 medallion numbers based on the number of trips.
-
 ```val taxi = sc.textFile("/resources/jupyterlab/labs/BD0211EN/LabData/nyctaxi.csv")```
-To view the five rows of content, invoke the take function. Type in:
 
+To view the five rows of content, invoke the take function. Type in:
 ```taxi.take(5).foreach(println)```
+
 Note that the first line is the headers. Normally, you would want to filter that out, but since it will not affect our results, we can leave it in.
 
 To parse out the values, including the medallion numbers, you need to first create a new RDD by splitting the lines of the RDD using the comma as the delimiter. Type in:
-
 ```val taxiParse = taxi.map(line=>line.split(","))```
+
 Now create the key-value pairs where the key is the medallion number and the value is 1. We use this model to later sum up all the keys to find out the number of 
 trips a particular taxi took and in particular, will be able to see which taxi took the most trips. Map each of the medallions to the value of one. Type in:
-
 ```val taxiMedKey = taxiParse.map(vals=>(vals(6), 1))```
+
 vals(6) corresponds to the column where the medallion key is located
 
 Next use the reduceByKey function to count the number of occurrence for each key.
-
 ```
 val taxiMedCounts = taxiMedKey.reduceByKey((v1,v2)=>v1+v2)
 
@@ -231,23 +256,23 @@ taxiMedCounts.take(5).foreach(println)
 ```
 
 Finally, the values are swapped so they can be ordered in descending order and the results are presented correctly.
-
 ```for (pair <-taxiMedCounts.map(_.swap).top(10)) println("Taxi Medallion %s had %s Trips".format(pair._2, pair._1))```
+
 While each step above was processed one line at a time, you can just as well process everything on one line:
-
 ```val taxiMedCountsOneLine = taxi.map(line=>line.split(',')).map(vals=>(vals(6),1)).reduceByKey(_ + _)```
-Run the same line as above to print the taxiMedCountsOneLine RDD.
 
+Run the same line as above to print the taxiMedCountsOneLine RDD.
 ```for (pair <-taxiMedCountsOneLine.map(_.swap).top(10)) println("Taxi Medallion %s had %s Trips".format(pair._2, pair._1))```
+
 Let's cache the taxiMedCountsOneLine to see the difference caching makes. Run it with the logs set to INFO and you can see the output of the time it takes
 to execute each line. First, let's cache the RDD
-
 ```taxiMedCountsOneLine.cache()```
+
 Next, you have to invoke an action for it to actually cache the RDD. Note the time it takes here (either empirically using the INFO log or just notice the time it takes)
-
 ```taxiMedCountsOneLine.count()```
+
 Run it again to see the difference.
-
 ```taxiMedCountsOneLine.count()```
+
 The bigger the dataset, the more noticeable the difference will be. In a sample file such as ours, the difference may be negligible.
 
