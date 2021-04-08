@@ -1,0 +1,548 @@
+Python :
+
+Python execution modes:
+
+2 modes
+1)Interactiv mode
+2)Batch mode
+
+1)Interactive mode: writing stmts directly on python interpreter
+>>> 3+4
+7
+>>> x=10
+>>> y=20
+>>> x+y
+30
+>>> x-y
+-10
+>>> x
+10
+>>> y
+20
+>>> x*y
+200
+>>> "hello" *3
+'hellohellohello'
+
+
+Python supports dynamic datatypes
+
+c/C++/Java                 Python
+int x=10                   x=10      ---->based on the value assigned the variables are created dynamically
+float y=4.5                y=4.5     ---->here float variabl is created
+string z="hello"           z="hello" ---->here string variable is created
+---------------------------------------------------------------------------------------------------------
+ 
+2)Batch mode :writing batch of stmts and saving using .py extension
+
+$ nano sample1.py
+#Program performing Arithmetic operations
+x=10
+y=20
+print(x+y)
+print(x-y)
+print(x*y)
+print(x/y)
+
+$ python sample1.py
+30
+-10
+200
+0
+
+-------------------------------------------------------------------------------------------------------------
+Fundamental Datatypes in Python:
+
+1)int
+2)float
+3)string
+4)complex
+5)boolean
+
+All these datatypes are objects represented by built-in classes
+
+1)int
+
+x=10  ------This 10 is stored in an object ,that object has address and that address is stored by x
+          print(x)---->prints the content present at that address
+          print(id(x))-->prints the address of x
+          print(type(x))-->prints the type of x
+
+>>> x=10
+>>> print(x)
+10
+>>> print(id(x))
+20684928
+>>> print(type(x))
+<type 'int'>
+
+ex:2
+>>> x=10
+>>> y=10
+>>> print(x,id(x))
+(10, 20684928)
+>>> print(y,id(y))
+(10, 20684928)
+
+here only one object created and its address is given to both the variables
+
+2)float
+>>> x=4.5
+>>> print(x,type(x))
+(4.5, <type 'float'>)
+
+3)boolean
+>>> x=True
+>>> print(x,type(x))
+(True, <type 'bool'>)
+
+4)Complex
+>>> x=3+4j
+>>> print(x,type(x))
+((3+4j), <type 'complex'>)
+
+5)String
+>>> x="hello"
+>>> print(x,type(x))
+('hello', <type 'str'>)
+>>> y="India"
+>>> x+y
+'helloIndia'
+
+string indexing and slicing
+>>> x="python program"
+>>> x[0]
+'p'
+>>> x[1]
+'y'
+>>> x[0:6]
+'python'
+>>> x[-6:-1]
+'rogra'
+>>> x[-7: ]
+'program'
+>>> x[ :6]
+'python'
+>>> x[0: ]
+'python program'
+
+-----------------------------------------------------------------------------------------------------------------
+
+Collection Datatypes:
+1)List : List is a mutable object, means changes and modifications are allowed
+2)Tuple
+3)set
+4)Dictionary
+
+1)List : List is a mutable object, means changes and modifications are allowed
+         List represnted using [ ]
+>>> x=[10,20,30,40,50]
+>>> print(x)
+[10, 20, 30, 40, 50]
+>>> len(x)
+5
+>>> sum(x)
+150
+>>> max(x)
+50
+>>> min(x)
+10
+
+modifying list value
+>>> x[1]=25
+>>> print(x)
+[10, 25, 30, 40, 50]
+
+list methods------>append(),extend(),insert(),remove(),pop()
+>>> x=[10,20,30,40,50]
+>>> x.append(60)
+>>> print(x)
+[10, 20, 30, 40, 50, 60]
+>>> x.insert(2,35)
+>>> print(x)
+[10, 20, 35, 30, 40, 50, 60]
+
+>>> x.extend(y)
+>>> print(x)
+[10, 20, 35, 30, 40, 50, 60, 1.5, 2.5, 3.5, 4.5, 5.5]
+
+>>> x.pop(2)
+35
+>>> print(x)
+[10, 20, 30, 40, 50, 60, 1.5, 2.5, 3.5, 4.5, 5.5]
+
+>>> x.remove(40)
+>>> print(x)
+[10, 20, 30, 50, 60, 1.5, 2.5, 3.5, 4.5, 5.5]
+
+----------------------------------------------------------------------------------------------------------------
+
+2)Tuple: It is immutable, changes and modifications are not allowed
+         Tuple reprsented using ( )
+ex:
+
+>>> x=(10,20,30,40,50)
+>>> y=([10,20,30],[40,50,60],(70,80,90))
+>>> print(x[0],type(x[0]))
+(10, <type 'int'>)
+>>> print(y[0],type(y[0]))
+([10, 20, 30], <type 'list'>)
+>>> print(y[1],type(y[1]))
+([40, 50, 60], <type 'list'>)
+>>> print(y[2],type(y[2]))
+((70, 80, 90), <type 'tuple'>)
+>>> y[0][1]=25
+>>> print(y)
+([10, 25, 30], [40, 50, 60], (70, 80, 90))
+
+
+------------------------------------------------------------------------------------------------------------
+
+3)sets: It is a mutable element,changes and modifications are allowed
+        set reprsnted using curly braces( { } )
+        -sets doesnt allow duplicates
+        -sets doesnt support indexing
+        -in sets insertion order is not preserved, i.e the order in which the elements are insrted and the
+         order in which they are stored are not same
+ex:
+>>> x={10,20,30,40,50}
+>>> print(x)
+set([40, 50, 20, 10, 30])
+>>> x={10,20,30,40,50,10,20}
+>>> len(x)
+5
+>>> x
+set([40, 10, 20, 50, 30])
+>>> #adding element
+... 
+>>> x.add(60)
+>>> x
+set([40, 10, 50, 20, 60, 30])
+>>> #removing element
+... 
+>>> x.discard(40)
+>>> x
+set([10, 50, 20, 60, 30])
+
+-----------------------------------------------------------------------------------------------------------------
+
+4)dictionaries: collection of(k,v) pairs
+>>> x={"name":"James","age":25}
+>>> x
+{'age': 25, 'name': 'James'}
+>>> #adding a new (k,v)pair
+... 
+>>> x['sal']=50000
+>>> x['city']='chennai'
+>>> x
+{'city': 'chennai', 'age': 25, 'name': 'James', 'sal': 50000}
+>>> #accessing an elemnt ,if u pass the key, you get the value
+... 
+>>> x['name']
+'James'
+>>> x['sal']
+50000
+
+--------------------------------------------------------------------------------------------------------------------
+
+Flow control stmts in python:
+These stmts are used to execute or not to execute set of stmts
+                 (or)
+These stmts are used to execute set of stmts for repeated no of times
+The available flow contol stmts are
+1)if
+2)if-else
+3)elif
+4)while
+5)for
+
+1)if-else syntax:
+if(condition):
+   stmt1
+   stmt2
+   stmt3
+   stmtn
+else:
+   stmt1
+    .
+    .
+   stmtn
+All the statements witin if-block and else block should follow the same space indentation
+
+>>> #program to check whether a no is positive no or Negative no
+... 
+>>> x=input("Enter a No:")
+Enter a No:10
+>>> type(x)
+<type 'int'>
+>>> if(x>0):
+...    print(x," is a postive no")
+... else:
+...    print(x," is a negative no")
+... 
+(10, ' is a postive no')
+
+---------------------------------------------------------------------------------------------------------------->>> 
+
+>>> #Program to check whether 2 no's are equal
+... 
+>>> x=input("Enter value of x:")
+Enter value of x:10
+>>> y=input("Enter value of y:")
+Enter value of y:20
+>>> if(x==y):
+...    print("equal")
+... else:
+...    print("not equal")
+... 
+not equal
+
+----------------------------------------------------------------------------------------------------------------
+
+elif:
+
+>>> #program illustrating change in time
+... 
+>>> time=input("Enter current time:")
+Enter current time:19.12
+>>> type(time)
+<type 'float'>
+>>> if(time<=12.00):
+...    print("Good Morning...")
+... elif(time<=16.00):
+...    print("Good Afternoon...")
+... elif(time<=20.00):
+...    print("Good Evening...")
+... else:
+...    print("Good Night...")
+... 
+Good Evening...
+
+-----------------------------------------------------------------------------------------------------------------
+
+while loop:
+
+syntax:
+initialization
+while(condition):
+    stmt1
+    stmt2
+    stmt3
+    stmt4
+     .
+     .
+    stmtn
+    increment/decrement
+
+stmts within while will be executed untill the condition is true
+if condition is false then control comes out of while loop
+
+>>> #program to print no's from 1 to 10 
+... 
+>>> x=1
+>>> while(x<=10):
+...    print(x)
+...    x=x+1
+... 
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+-------------------------------------------------------------------------------------------------
+
+>>> #program to find the sum of first 'n' numbers
+
+>>> 
+>>> n=input("Enter value of n:")
+Enter value of n:10
+>>> x=1
+>>> sum=0
+>>> while(x<=n):
+...    sum=sum+x
+...    x=x+1
+... 
+>>> print(sum)
+55
+
+----------------------------------------------------------------------------------------------
+
+for loop: for loop in python executes for every element of collection object
+
+>>> x=[10,20,30,40,50]
+>>> for p in x:
+...    print(p)
+... 
+10
+20
+30
+40
+50
+
+-----------------------------------------------------------------------------------------------
+
+>>> #finding the sum of list elements
+... 
+>>> sum=0
+>>> for p in x:
+...    sum=sum+p
+... 
+>>> print(sum)
+150
+
+-----------------------------------------------------------------------------------------------
+
+>>> x=[10,20,30,40,50]
+>>> for p in x:
+...    print("hello..")
+... 
+hello..
+hello..
+hello..
+hello..
+hello..
+
+-------------------------------------------------------------------------------------------------
+
+Printing each character of a string for 3 times
+>>> x="spark"
+>>> for p in x:
+...    print(p*3)
+... 
+sss
+ppp
+aaa
+rrr
+kkk
+
+-------------------------------------------------------------------------------------------------
+
+Functions in python:
+
+Functions are executed on demand by making a function call
+
+A function can be executed for multiple times
+
+we can make 'n' no of function calls
+
+function is defined by using a keyword def
+
+function also follows space indentation.
+
+syntax:
+
+def functionname(parameters):
+    stmt1
+    stmt2
+    stmt3
+    .
+    .
+    .
+    .
+    stmtn
+
+
+---------------------------------------------------------------------------------------------------------------
+
+>>> def display():
+...    print("Good Evening...")
+...    print("Hello...")
+...    print("Hello India...")
+... 
+>>> display()
+Good Evening...
+Hello...
+Hello India...
+>>> display()
+Good Evening...
+Hello...
+Hello India...
+
+ex:2
+>>> # Function to print a list
+... x=[10,20,30,40,50]
+>>> def display():
+...    for p in x:
+...       print(p)
+... 
+>>> display()
+10
+20
+30
+40
+50
+
+-------------------------------------------------------------------------------------------------------------------
+
+>>> #Function with parameters
+... 
+>>> def compute(x,y):
+...     z=x+y
+...     print(z)
+... 
+>>> compute(10,20)
+30
+
+---------------------------------------------------
+
+>>> #Function with returntype
+... 
+>>> def compute1(x,y):
+...     z=x+y
+...     return z
+... 
+>>> p=compute1(20,30)
+>>> print(p)
+50
+>>> 
+>>> print(compute1(30,40))
+70
+
+------------------------------------------------------
+
+>>> #Function can return multiple values
+... 
+>>> def marks(s1,s2,s3):
+...     tot=s1+s2+s3
+...     avg=tot/3
+...     return tot,avg
+... 
+>>> p,q=marks(90,80,70)
+>>> print(p)
+240
+>>> print(q)
+80
+
+--------------------------------------------------------
+
+Lambda function:
+A function which doesnt have any name
+
+syntax :
+lambda parameters:Expression
+
+when a function doesnt have any name ,then how to call that function
+
+assign lambda function to a variable,then the variable acts as a fnname and
+using that variablename, we can make function call
+
+
+>>> #lambda fn to square a number
+... 
+>>> f1=lambda x:x*x
+>>> p=f1(10)
+>>> print(p)
+100
+>>> 
+>>> #ex:2 lambda with 2 parameters
+... 
+>>> f1=lambda x,y:x+y
+>>> p=f1(10,20)
+>>> print(p)
+30
